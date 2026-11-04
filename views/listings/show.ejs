@@ -11,7 +11,8 @@
 
         <!-- Listing Card -->
         <div class="card col-6 offset-3 show-card listing-card">
-            <img src="<%= listing.image ? listing.image.url : '' %>" class="card-img-top show-img" alt="listing_image">
+            <% const defaultImg = "https://images.unsplash.com/photo-1625505826533-5c80aca7d157?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=60"; %>
+            <img src="<%= (listing.image && listing.image.url) ? listing.image.url : defaultImg %>" class="card-img-top show-img" alt="listing_image">
 
             <div class="card-body">
                 <p class="card-text">Owned by <i><b>

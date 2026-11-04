@@ -2,6 +2,9 @@ const Listing = require("../models/listing");
 const { listingSchema } = require("../Schema.js");
 const ExpressError = require("../utils/expressError.js");
 
+const DEFAULT_IMAGE_URL =
+  "https://images.unsplash.com/photo-1625505826533-5c80aca7d157?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=60";
+
 module.exports.index = async (req, res) => {
   const allListing = await Listing.find({});
   res.render("listings/index.ejs", { allListing });
@@ -40,6 +43,11 @@ module.exports.createListing = async (req, res, next) => {
     let url = req.file.path;
     let filename = req.file.filename;
     newListing.image = { url, filename };
+  } else {
+    newListing.image = {
+      url: DEFAULT_IMAGE_URL,
+      filename: "listingimage",
+    };
   }
 
   await newListing.save();
@@ -54,7 +62,7 @@ module.exports.editListing = async (req, res) => {
     req.flash("error", "Listing you requested for does not exist!");
     return res.redirect("/listings");
   }
-  let orignalImageUrl = listing.image ? listing.image.url : "";
+  let orignalImageUrl = (listing.image && listing.image.url) ? listing.image.url : DEFAULT_IMAGE_URL;
   if (orignalImageUrl && orignalImageUrl.includes("/upload")) {
     orignalImageUrl = orignalImageUrl.replace("/upload", "/upload/w_250");
   }

@@ -2,6 +2,9 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const Review = require("./review.js");
 
+const DEFAULT_IMAGE_URL =
+  "https://images.unsplash.com/photo-1625505826533-5c80aca7d157?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=60";
+
 const listingSchema = new Schema({
   title: {
     type: String,
@@ -9,8 +12,18 @@ const listingSchema = new Schema({
   },
   description: String,
   image: {
-    url: String,
-    filename: String,
+    url: {
+      type: String,
+      default: DEFAULT_IMAGE_URL,
+      set: (v) =>
+        !v || v === ""
+          ? DEFAULT_IMAGE_URL
+          : v,
+    },
+    filename: {
+      type: String,
+      default: "listingimage",
+    },
   },
   price: Number,
   location: String,
