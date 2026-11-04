@@ -6,8 +6,44 @@ const DEFAULT_IMAGE_URL =
   "https://images.unsplash.com/photo-1625505826533-5c80aca7d157?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=60";
 
 module.exports.index = async (req, res) => {
-  const allListing = await Listing.find({});
-  res.render("listings/index.ejs", { allListing });
+  const { q, category } = req.query;
+  let filter = {};
+
+  if (q && q.trim() !== "") {
+    const searchRegex = new RegExp(q.trim(), "i");
+    filter.$or = [
+      { title: searchRegex },
+      { location: searchRegex },
+      { country: searchRegex },
+      { description: searchRegex },
+      { category: searchRegex },
+    ];
+  }
+
+  if (category && category.trim() !== "") {
+    const catRegex = new RegExp(category.trim(), "i");
+    const catQuery = {
+      $or: [
+        { category: category.trim() },
+        { title: catRegex },
+        { location: catRegex },
+        { description: catRegex },
+      ],
+    };
+
+    if (filter.$or) {
+      filter = { $and: [{ $or: filter.$or }, catQuery] };
+    } else {
+      filter = catQuery;
+    }
+  }
+
+  const allListing = await Listing.find(filter);
+  res.render("listings/index.ejs", {
+    allListing,
+    searchQuery: q ? q.trim() : "",
+    selectedCategory: category ? category.trim() : "",
+  });
 };
 
 module.exports.RenderNewForm = (req, res) => {

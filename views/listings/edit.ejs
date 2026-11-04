@@ -18,9 +18,7 @@
                 <!-- Description -->
                 <div class="mb-3">
                     <label for="description" class="form-label">Description</label>
-                    <textarea id="description" required name="listing[description]" class="form-control" rows="4">
-                        <%= listing.description %>
-                    </textarea>
+                    <textarea id="description" required name="listing[description]" class="form-control" rows="4"><%= listing.description %></textarea>
                     <div class="invalid-feedback">Please enter a short description!</div>
                 </div>
 
@@ -28,7 +26,7 @@
                 <div class="mb-3">
                     <label class="form-label">Current Image</label>
                     <br>
-                    <img src="<%= orignalImageUrl%>" alt="Current Image">
+                    <img src="<%= orignalImageUrl %>" alt="Current Image" style="max-height: 150px; border-radius: 8px;">
                 </div>
 
                 <div class="mb-3">
@@ -59,6 +57,17 @@
                     <input type="text" required id="location" name="listing[location]" value="<%= listing.location %>"
                         class="form-control">
                     <div class="invalid-feedback">Location should be valid!</div>
+                </div>
+
+                <!-- Category -->
+                <div class="mb-3">
+                    <label for="category" class="form-label">Category</label>
+                    <select name="listing[category]" id="category" class="form-select">
+                        <% const categories = ["Trending", "Rooms", "Iconic Cities", "Mountains", "Castles", "Amazing pools", "Camping", "Farms", "Arctic", "Domes"]; %>
+                        <% for (let cat of categories) { %>
+                            <option value="<%= cat %>" <%= listing.category === cat ? 'selected' : '' %>><%= cat %></option>
+                        <% } %>
+                    </select>
                 </div>
 
                 <!-- Edit/Update Button -->
