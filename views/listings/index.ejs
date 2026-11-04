@@ -200,7 +200,14 @@
         </div>
     <% } %>
 
-    <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1 mt-3">
+    <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1 mt-3" id="listings-container">
+        <!-- Live Search Empty State -->
+        <div id="no-live-results" class="col-12 text-center my-5 py-5" style="display: none;">
+            <i class="fa-solid fa-magnifying-glass fa-3x text-secondary mb-3"></i>
+            <h3 class="fw-bold">No Matching Destinations</h3>
+            <p class="text-muted">No places match what you're typing right now.</p>
+        </div>
+
         <% if (allListing.length === 0) { %>
             <div class="col-12 text-center my-5 py-5">
                 <i class="fa-solid fa-magnifying-glass fa-3x text-secondary mb-3"></i>
@@ -213,7 +220,11 @@
         <% for(let listing of allListing){ %>
             <% const defaultImg = "https://images.unsplash.com/photo-1625505826533-5c80aca7d157?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=60"; %>
             <% const cardImg = (listing.image && listing.image.url) ? listing.image.url : defaultImg; %>
-            <a href="/listings/<%=listing._id%>" class="listing-link">
+            <a href="/listings/<%=listing._id%>" class="listing-link"
+                data-title="<%= (listing.title || '').toLowerCase() %>"
+                data-location="<%= (listing.location || '').toLowerCase() %>"
+                data-country="<%= (listing.country || '').toLowerCase() %>"
+                data-category="<%= (listing.category || '').toLowerCase() %>">
                 <div class="card col listing-card">
                     <img src="<%= cardImg %>" class="card-img-top" alt="listingImage"
                         style="height: 20rem;">

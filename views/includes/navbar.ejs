@@ -33,18 +33,22 @@
                 <a class="nav-link" href="/listings">Explore</a>
             </div>
             <div class="navbar-nav ms-auto">
-                <form class="d-flex" role="search" action="/listings" method="GET">
+                <form class="d-flex position-relative" role="search" action="/listings" method="GET" id="search-form">
                     <input
                         class="form-control me-2 search-input"
                         type="search"
+                        id="search-input"
                         name="q"
                         placeholder="Search destinations..."
                         value="<%= typeof searchQuery !== 'undefined' ? searchQuery : '' %>"
                         aria-label="Search"
+                        autocomplete="off"
                     />
                     <button class="btn btn-search" type="submit">
                         <i class="fa-solid fa-magnifying-glass"></i>Search
                     </button>
+                    <!-- Live Search Results Dropdown -->
+                    <div id="search-results-dropdown" class="search-dropdown d-none"></div>
                 </form>
             </div>
             <div class="navbar-nav ms-auto">

@@ -18,6 +18,9 @@ router
     wrapAsync(listingController.createListing),
   );
 
+// Live Search API Route (MUST be placed before /:id)
+router.get("/search", wrapAsync(listingController.liveSearch));
+
 // New Route
 router.get("/new", isLoggedIn, listingController.RenderNewForm);
 

@@ -46,6 +46,38 @@ module.exports.index = async (req, res) => {
   });
 };
 
+module.exports.liveSearch = async (req, res) => {
+  const { q } = req.query;
+  if (!q || q.trim() === "") {
+    return res.json([]);
+  }
+
+  const searchRegex = new RegExp(q.trim(), "i");
+  const listings = await Listing.find({
+    $or: [
+      { title: searchRegex },
+      { location: searchRegex },
+      { country: searchRegex },
+      { description: searchRegex },
+      { category: searchRegex },
+    ],
+  })
+    .limit(8)
+    .select("title location country price image category");
+
+  const results = listings.map((l) => ({
+    _id: l._id,
+    title: l.title,
+    location: l.location,
+    country: l.country,
+    price: l.price,
+    category: l.category,
+    image: l.image && l.image.url ? l.image.url : DEFAULT_IMAGE_URL,
+  }));
+
+  res.json(results);
+};
+
 module.exports.RenderNewForm = (req, res) => {
   res.render("listings/new.ejs");
 };
@@ -98,7 +130,8 @@ module.exports.editListing = async (req, res) => {
     req.flash("error", "Listing you requested for does not exist!");
     return res.redirect("/listings");
   }
-  let orignalImageUrl = (listing.image && listing.image.url) ? listing.image.url : DEFAULT_IMAGE_URL;
+  let orignalImageUrl =
+    listing.image && listing.image.url ? listing.image.url : DEFAULT_IMAGE_URL;
   if (orignalImageUrl && orignalImageUrl.includes("/upload")) {
     orignalImageUrl = orignalImageUrl.replace("/upload", "/upload/w_250");
   }
